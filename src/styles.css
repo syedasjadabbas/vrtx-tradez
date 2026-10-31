@@ -151,23 +151,32 @@ h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.
   /* Each card holds its place for roughly a screen of scrolling before the next slides over */
   margin-bottom: 70vh;
   display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center;
-  padding: 44px 48px; border-radius: 28px; border: 1px solid var(--line-2);
+  /* Vertical sizes follow the screen height so a card fits short laptop screens too */
+  padding: clamp(22px, 4.5vh, 44px) 48px; border-radius: 28px; border: 1px solid var(--line-2);
   background: radial-gradient(700px circle at 0 0, rgba(95,150,255,.08), transparent 55%), linear-gradient(180deg, #16171b, #0e0f12);
   box-shadow: 0 -30px 60px -24px rgba(0,0,0,.85);
-  transform-origin: 50% 0; transform: scale(calc(1 - var(--q, 0) * .05)); will-change: transform;
+  /* --e: landing progress (tilts back and grows to full size as it arrives)
+     --q: how far the next card covers it (pushes back)  --fit: shrink for short screens */
+  transform-origin: 50% 0;
+  transform: perspective(1600px) rotateX(calc((1 - var(--e, 1)) * 7deg))
+             scale(calc(var(--fit, 1) * (.94 + var(--e, 1) * .06) * (1 - var(--q, 0) * .05)));
+  will-change: transform;
 }
+/* A thin accent edge that glows while the card is travelling and fades once it lands */
+.stack-card::after { content: ''; position: absolute; left: 10%; right: 10%; top: -1px; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: calc((1 - var(--e, 1)) * .9); }
 .stack-card:last-of-type { margin-bottom: 0; }
 .stack-card::before { content: ''; position: absolute; inset: -1px; border-radius: inherit; background: #000; opacity: calc(var(--q, 0) * .55); pointer-events: none; z-index: 3; }
-.stack-info { display: flex; flex-direction: column; gap: 28px; align-self: stretch; }
-.stack-info h3 { max-width: 460px; font-size: clamp(24px, 2.4vw, 30px); }
+.stack-info { display: flex; flex-direction: column; gap: clamp(14px, 3.2vh, 28px); align-self: stretch; }
+.stack-info h3 { max-width: 460px; font-size: clamp(22px, min(2.4vw, 4.4vh), 30px); }
 .stack-info p { color: var(--muted); margin-top: 14px; max-width: 440px; font-size: 16px; line-height: 1.65; }
-.stack-points { list-style: none; display: flex; flex-direction: column; gap: 12px; padding-top: 24px; border-top: 1px solid var(--line); }
+.stack-points { list-style: none; display: flex; flex-direction: column; gap: clamp(8px, 1.6vh, 12px); padding-top: clamp(14px, 3vh, 24px); border-top: 1px solid var(--line); }
 .stack-points.reveal { transform: none; }
 .stack-points li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #d4d4d8; }
 .stack-points svg { color: var(--accent); flex: none; }
 .stack-count { margin-top: auto; font-size: 12px; color: var(--dim); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
 .pillar-num { display: flex; align-items: flex-start; gap: 12px; }
-.pillar-num .big { font-family: var(--display); font-size: clamp(72px, 7vw, 112px); line-height: .8; font-weight: 400; letter-spacing: -0.06em; }
+.pillar-num .big { font-family: var(--display); font-size: clamp(56px, min(7vw, 12vh), 112px); line-height: .8; font-weight: 400; letter-spacing: -0.06em; }
 .pillar-num .tag { color: var(--muted); font-size: 15px; padding-top: 6px; }
 
 /* Card content: one ordered sequence that starts once the card has settled.
@@ -176,6 +185,32 @@ h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.
 .stack-card.in .anim { opacity: 1; transform: none; }
 .stack-card .anim--mock { transform: translateY(20px) scale(.985); transition-duration: .9s; }
 .stack-card.in .anim--mock { transform: none; }
+
+/* Chart draws on left to right behind a soft scan line once the card lands */
+@property --wipe { syntax: '<number>'; inherits: true; initial-value: 0; }
+.stack-card .mock-chart { --wipe: 0; transition: --wipe 1.5s cubic-bezier(.65,0,.35,1) .45s; }
+.stack-card.in .mock-chart { --wipe: 1.08; }
+.stack-card .mock-chart .chart-box {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--wipe) * 100% - 8%), transparent calc(var(--wipe) * 100%));
+          mask-image: linear-gradient(90deg, #000 calc(var(--wipe) * 100% - 8%), transparent calc(var(--wipe) * 100%)); }
+.stack-card .mock-chart::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; pointer-events: none;
+  left: calc(var(--wipe) * 100% - 1px); background: linear-gradient(180deg, transparent, var(--accent), transparent);
+  box-shadow: 0 0 18px 2px rgba(95,150,255,.45); opacity: clamp(0, (1.06 - var(--wipe)) * 12, 1); }
+.stack-card .candle { opacity: 1; animation: none; }
+.stack-card .chart-anno { transition-delay: 1.8s !important; }
+
+/* Short laptop screens: keep the cards compact */
+@media (min-width: 961px) and (max-height: 700px) {
+  .stack-info p { font-size: 15px; line-height: 1.55; }
+  .stack-points li { font-size: 14px; }
+  .mock { padding: 14px; }
+  .mock-row div { padding: 9px 12px; }
+  .dc-feed { gap: 10px; }
+  .dc-msg { font-size: 13px; }
+  .dc-main { gap: 10px; }
+  .mm-list li { padding: 10px 14px; }
+  .mm-note { padding: 12px 14px; }
+}
 
 /* Mock-up cursor highlight */
 .mock-wrap .mock { position: relative; transition: border-color .3s ease; }
@@ -187,7 +222,7 @@ h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.
 .mock-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .mock-pill { font-size: 12px; padding: 4px 10px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(95,150,255,.25); }
 .mock-muted { color: var(--muted); font-size: 13px; }
-.mock-chart { height: 220px; border-radius: 12px; overflow: hidden; background: #0c0c0d; border: 1px solid var(--line); }
+.mock-chart { position: relative; height: clamp(140px, 26vh, 220px); border-radius: 12px; overflow: hidden; background: #0c0c0d; border: 1px solid var(--line); }
 .mock-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
 .mock-row div { display: flex; flex-direction: column; padding: 12px; border-radius: 12px; background: rgba(255,255,255,.03); border: 1px solid var(--line); }
 .mock-row strong { font-weight: 500; font-size: 15px; }
@@ -345,6 +380,7 @@ footer { border-top: 1px solid var(--line); }
   .reveal, .candle, .chart-anno, .stack-card .anim, .stagger > *, .dc-msg, .dc-typing, .mm-note { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
   .mm-progress span { transform: scaleX(var(--w)); transition: none; }
   .mm-check { stroke-dashoffset: 0; }
+  .stack-card .mock-chart { --wipe: 1.08; transition: none; }
 }
 
 /* Responsive */
@@ -360,7 +396,7 @@ footer { border-top: 1px solid var(--line); }
   .daily h2 { position: static; }
   .approach { padding-top: 88px; }
   .stack-card { position: relative; top: auto; grid-template-columns: 1fr; gap: 28px; padding: 28px 22px; min-height: 0; margin-bottom: 16px; transform: none; }
-  .stack-card::before { display: none; }
+  .stack-card::before, .stack-card::after { display: none; }
   .stack-spacer { display: none; }
   .principles { grid-template-columns: 1fr; }
   .trades { grid-template-columns: 1fr 1fr; }

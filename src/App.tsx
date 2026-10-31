@@ -155,12 +155,20 @@ function Approach() {
       const cards = refs.current
       cards.forEach((el, i) => {
         if (!el) return
-        if (!el.classList.contains('in') && el.getBoundingClientRect().top < vh * 0.55) el.classList.add('in')
+        const top = el.getBoundingClientRect().top
+        if (!el.classList.contains('in') && top < vh * 0.55) el.classList.add('in')
+        // Stacking only runs where the cards are sticky (desktop): --e is how far this
+        // card has travelled into place, --fit shrinks it if the screen is too short.
+        if (getComputedStyle(el).position === 'sticky') {
+          const stick = parseFloat(getComputedStyle(el).top) || 0
+          el.style.setProperty('--e', ease(Math.min(1, Math.max(0, (vh - top) / (vh - stick)))).toFixed(3))
+          el.style.setProperty('--fit', Math.min(1, (vh - stick - 20) / el.offsetHeight).toFixed(3))
+        }
         const next = cards[i + 1]
         if (!next) return el.style.setProperty('--q', '0')
         const stickTop = parseFloat(getComputedStyle(next).top) || 0
-        const top = next.getBoundingClientRect().top
-        const q = Math.min(1, Math.max(0, (vh - top) / (vh - stickTop)))
+        const nextTop = next.getBoundingClientRect().top
+        const q = Math.min(1, Math.max(0, (vh - nextTop) / (vh - stickTop)))
         el.style.setProperty('--q', ease(q).toFixed(3))
       })
     }
