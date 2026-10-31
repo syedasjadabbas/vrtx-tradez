@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="splash-on">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -61,9 +61,59 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
     <link rel="preload" as="image" href="/video/vrtx-hero-poster.jpg" />
+    <style>
+      /* Splash screen: inline so it paints before the app's CSS and JS load */
+      html.splash-on { overflow: hidden; }
+      #splash { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: #0a0a0b;
+        transition: opacity .6s cubic-bezier(.22,1,.36,1), visibility .6s; }
+      #splash::before { content: ''; position: absolute; width: 640px; height: 640px; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        background: radial-gradient(closest-side, rgba(95,150,255,.16), transparent 70%); pointer-events: none; }
+      #splash.done { opacity: 0; visibility: hidden; }
+      #splash.done .sp-inner { transform: scale(.97); }
+      .sp-inner { position: relative; display: flex; flex-direction: column; align-items: center; gap: 28px; transition: transform .6s cubic-bezier(.22,1,.36,1); }
+      .sp-logo { width: 56px; height: 56px; border-radius: 15px; box-shadow: 0 0 40px rgba(95,150,255,.25); animation: sp-fade .6s ease both; }
+      .sp-chart { position: relative; width: 196px; height: 110px; }
+      .sp-c { position: absolute; bottom: var(--b); left: calc(var(--i) * 14px); width: 8px; height: var(--h); border-radius: 2px;
+        background: #4a4a52; transform-origin: 50% 100%; opacity: 0;
+        animation: sp-grow .42s cubic-bezier(.22,1,.36,1) forwards; animation-delay: calc(.1s + var(--i) * 55ms); }
+      .sp-c::before { content: ''; position: absolute; left: 50%; top: -5px; bottom: -5px; width: 1.5px; transform: translateX(-50%); background: inherit; z-index: -1; }
+      .sp-c.up { background: #e9e9ea; }
+      .sp-c.last { background: #5f96ff; box-shadow: 0 0 16px rgba(95,150,255,.8); }
+      .sp-bar { width: 160px; height: 2px; border-radius: 2px; background: rgba(255,255,255,.08); overflow: hidden; }
+      .sp-bar span { display: block; height: 100%; background: #5f96ff; transform-origin: left; animation: sp-load 1.4s cubic-bezier(.65,0,.35,1) forwards; }
+      .sp-word { font: 600 13px/1 Inter, system-ui, sans-serif; letter-spacing: .5em; margin-right: -.5em; color: #8b8b92; animation: sp-fade .6s ease .2s both; }
+      @keyframes sp-grow { from { opacity: 0; transform: scaleY(.15); } to { opacity: 1; transform: none; } }
+      @keyframes sp-load { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+      @keyframes sp-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) { .sp-c, .sp-bar span, .sp-logo, .sp-word { animation: none; opacity: 1; transform: none; } }
+    </style>
+    <noscript><style>#splash { display: none; } html.splash-on { overflow: auto; }</style></noscript>
   </head>
   <body>
     <noscript>VRTX is a gold trading community led by Mirza. Join free on Discord: https://discord.gg/yU9G5sgBHh</noscript>
+    <div id="splash" aria-hidden="true">
+      <div class="sp-inner">
+        <img class="sp-logo" src="/icon-192.png" alt="" width="56" height="56" />
+        <div class="sp-chart">
+          <i class="sp-c up" style="--b:40px;--h:12px;--i:0"></i>
+          <i class="sp-c" style="--b:46px;--h:10px;--i:1"></i>
+          <i class="sp-c" style="--b:38px;--h:10px;--i:2"></i>
+          <i class="sp-c" style="--b:30px;--h:10px;--i:3"></i>
+          <i class="sp-c" style="--b:20px;--h:12px;--i:4"></i>
+          <i class="sp-c up" style="--b:24px;--h:16px;--i:5"></i>
+          <i class="sp-c up" style="--b:36px;--h:14px;--i:6"></i>
+          <i class="sp-c" style="--b:44px;--h:10px;--i:7"></i>
+          <i class="sp-c up" style="--b:42px;--h:16px;--i:8"></i>
+          <i class="sp-c up" style="--b:52px;--h:14px;--i:9"></i>
+          <i class="sp-c up" style="--b:60px;--h:12px;--i:10"></i>
+          <i class="sp-c up" style="--b:66px;--h:16px;--i:11"></i>
+          <i class="sp-c up" style="--b:76px;--h:14px;--i:12"></i>
+          <i class="sp-c up last" style="--b:84px;--h:18px;--i:13"></i>
+        </div>
+        <div class="sp-bar"><span></span></div>
+        <div class="sp-word">VRTX</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

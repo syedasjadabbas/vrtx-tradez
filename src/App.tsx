@@ -4,10 +4,10 @@ import { AnalysisMock, CommunityMock, MentorshipMock } from './components/Mocks'
 import { ArrowIcon, CheckIcon, DiscordIcon, InstagramIcon, WhatsAppIcon, XIcon } from './components/Icons'
 import { daily, faqs, links, mentor, nav, partners, pillars, plans, principles, stats, testimonials, trades } from './content'
 
-// Fades sections in as they scroll into view.
+// Fades sections in as they scroll into view. While the splash screen is up it waits,
+// so the hero animates in as the splash fades out instead of behind it.
 function useReveal() {
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal')
     const io = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
@@ -18,8 +18,13 @@ function useReveal() {
         }),
       { threshold: 0.12 },
     )
-    els.forEach((el) => io.observe(el))
-    return () => io.disconnect()
+    const start = () => document.querySelectorAll('.reveal').forEach((el) => io.observe(el))
+    if (document.documentElement.classList.contains('splash-on')) window.addEventListener('splashdone', start, { once: true })
+    else start()
+    return () => {
+      window.removeEventListener('splashdone', start)
+      io.disconnect()
+    }
   }, [])
 }
 
