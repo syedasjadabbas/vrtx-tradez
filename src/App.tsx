@@ -37,7 +37,7 @@ function Header() {
     <header className={`header${scrolled ? ' scrolled' : ''}${open ? ' open' : ''}`}>
       <div className="container header-inner">
         <a href="#top" className="logo" aria-label="VRTX home">
-          <img src="/vrtx-icon.png" alt="" />
+          <span className="logo-mark"><img src="/vrtx-icon.png" alt="" /></span>
           <span>VRTX</span>
         </a>
         <nav className="nav">
@@ -408,7 +408,7 @@ function Footer() {
       </div>
       <div className="container footer-grid">
         <div>
-          <a href="#top" className="logo"><img src="/vrtx-icon.png" alt="" /><span>VRTX</span></a>
+          <a href="#top" className="logo"><span className="logo-mark"><img src="/vrtx-icon.png" alt="" /></span><span>VRTX</span></a>
           <p className="mock-muted">I intersect the candles.</p>
           <div className="socials">
             <a href={links.discord} target="_blank" rel="noreferrer" aria-label="Discord"><DiscordIcon /></a>
