@@ -100,7 +100,10 @@ function Hero() {
           </span>
           <span>Trusted by <strong>330+ traders</strong><span className="proof-extra"> in the VRTX community</span></span>
         </a>
-        <h1 className="reveal">In pursuit of price.<br /><span className="muted">Guided by time.</span></h1>
+        <h1 className="hero-title reveal">
+          <span className="hero-title-main">In pursuit of price.</span>
+          <span className="hero-title-serif">Guided by <em>time.</em></span>
+        </h1>
         <p className="lead reveal">
           Learn the gold trading process refined by Mirza, with daily analysis, honest trade breakdowns and a
           community built for traders who want consistency over noise.
