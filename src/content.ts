@@ -12,6 +12,7 @@ export const links = {
 
 export const nav = [
   { label: 'Approach', href: '#approach' },
+  { label: 'Mentor', href: '#mentor' },
   { label: 'Trades', href: '#trades' },
   { label: 'Membership', href: '#membership' },
   { label: 'Results', href: '#results' },
@@ -24,6 +25,25 @@ export const stats = [
   { value: '1-on-1', label: 'Private mentorship' },
   { value: '$0', label: 'To join the community' },
 ]
+
+// Founder section. Copy is a draft built from Mirza's public profiles. Have him confirm it.
+// photo: put his photo at public/mirza.jpg and set photo: '/mirza.jpg'. Until then a branded card shows.
+export const mentor = {
+  eyebrow: 'Meet your mentor',
+  name: 'Mirza Hammad',
+  role: 'Founder, VRTX',
+  photo: '',
+  story: [
+    'I trade gold, and I teach it exactly the way I trade it. Every idea starts with time, then price: when the move should happen, where the liquidity sits and which sequence confirms it.',
+    'VRTX started as a place to share that process openly. Today it is a free community of 330+ traders, daily XAUUSD analysis and private 1-on-1 mentorship for those who want to go deeper.',
+  ],
+  points: [
+    'XAUUSD focused, with trades shared publicly on X',
+    '330+ traders learning together in the VRTX Discord',
+    'Students passing prop firm challenges, Phase 1 and Phase 2',
+  ],
+  quote: 'Time over price. Learn when the market should move, and you stop guessing where.',
+}
 
 export const pillars = [
   {

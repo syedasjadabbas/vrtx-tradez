@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from
 import { CandleChart } from './components/CandleChart'
 import { AnalysisMock, CommunityMock, MentorshipMock } from './components/Mocks'
 import { ArrowIcon, CheckIcon, DiscordIcon, InstagramIcon, WhatsAppIcon, XIcon } from './components/Icons'
-import { daily, faqs, links, nav, partners, pillars, plans, principles, stats, testimonials, trades } from './content'
+import { daily, faqs, links, mentor, nav, partners, pillars, plans, principles, stats, testimonials, trades } from './content'
 
 // Fades sections in as they scroll into view.
 function useReveal() {
@@ -230,6 +230,46 @@ function Approach() {
         <div className="row">
           <a className="btn btn-ghost" href={links.discord} target="_blank" rel="noreferrer">Join free</a>
           <a className="btn btn-ghost" href={links.mentorship} target="_blank" rel="noreferrer">I want more</a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Mentor() {
+  return (
+    <section id="mentor" className="section mentor">
+      <div className="container mentor-grid">
+        <div className="mentor-photo reveal">
+          <div className="mentor-frame">
+            {mentor.photo ? (
+              <img src={mentor.photo} alt={mentor.name} loading="lazy" />
+            ) : (
+              <div className="mentor-placeholder" aria-hidden="true">
+                <img src="/icon-512.png" alt="" />
+              </div>
+            )}
+          </div>
+          <span className="mentor-caption">{mentor.name} · {mentor.role}</span>
+        </div>
+
+        <div className="mentor-body">
+          <span className="mentor-eyebrow reveal"><span className="dot" /> {mentor.eyebrow}</span>
+          <h2 className="reveal">{mentor.name}</h2>
+          {mentor.story.map((para) => (
+            <p key={para} className="mentor-text reveal">{para}</p>
+          ))}
+          <ul className="mentor-points reveal">
+            {mentor.points.map((pt) => (
+              <li key={pt}><ArrowIcon /> {pt}</li>
+            ))}
+          </ul>
+          <blockquote className="mentor-quote reveal">“{mentor.quote}”</blockquote>
+          <div className="mentor-links reveal">
+            <a href={links.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon /></a>
+            <a href={links.x} target="_blank" rel="noreferrer" aria-label="X"><XIcon /></a>
+            <a href={links.discord} target="_blank" rel="noreferrer" aria-label="Discord"><DiscordIcon /></a>
+          </div>
         </div>
       </div>
     </section>
@@ -490,6 +530,7 @@ export default function App() {
         <Hero />
         <Approach />
         <Philosophy />
+        <Mentor />
         <Trades />
         <Daily />
         <Membership />
