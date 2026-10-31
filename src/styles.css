@@ -56,6 +56,7 @@ h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.
 }
 .btn-lg { height: 48px; padding: 0 22px; font-size: 15px; border-radius: 12px; }
 .btn-block { width: 100%; }
+.plan-ctas { display: flex; flex-direction: column; gap: 10px; }
 .btn-accent { background: linear-gradient(180deg, #82adff, var(--accent-2)); color: #fff; box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 8px 30px -10px rgba(95,150,255,.6); }
 .btn-accent:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(255,255,255,.2) inset, 0 12px 40px -10px rgba(95,150,255,.8); }
 .btn-ghost { border: 1px solid var(--line-2); background: rgba(255,255,255,.02); }

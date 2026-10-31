@@ -5,8 +5,9 @@ export const links = {
   instagram: 'https://www.instagram.com/mirzatrades_07/',
   x: 'https://x.com/mirzaaaa000',
   linktree: 'https://linktr.ee/Mirza.SMT',
-  // 1-on-1 mentorship is booked through Instagram DMs
+  // 1-on-1 mentorship is booked through Instagram DMs or WhatsApp
   mentorship: 'https://ig.me/m/mirzatrades_07',
+  whatsapp: 'https://wa.me/923370333684?text=' + encodeURIComponent("Hi Mirza, I'm interested in 1-on-1 mentorship."),
 }
 
 export const nav = [
@@ -77,6 +78,7 @@ export const plans = [
     period: 'for availability',
     cta: 'Message on Instagram',
     href: links.mentorship,
+    secondary: { cta: 'Message on WhatsApp', href: links.whatsapp },
     featured: true,
     features: ['Everything in Community', 'Private sessions with Mirza', 'Model built around your schedule', 'Trade journal and execution review', 'Direct access for questions', 'Risk and psychology coaching'],
   },

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
 import { CandleChart } from './components/CandleChart'
 import { AnalysisMock, CommunityMock, MentorshipMock } from './components/Mocks'
-import { ArrowIcon, CheckIcon, DiscordIcon, InstagramIcon, XIcon } from './components/Icons'
+import { ArrowIcon, CheckIcon, DiscordIcon, InstagramIcon, WhatsAppIcon, XIcon } from './components/Icons'
 import { daily, faqs, links, nav, partners, pillars, plans, principles, stats, testimonials, trades } from './content'
 
 // Fades sections in as they scroll into view.
@@ -301,7 +301,16 @@ function Membership() {
                   <li key={f}><CheckIcon /> {f}</li>
                 ))}
               </ul>
-              <a className={`btn ${p.featured ? 'btn-accent' : 'btn-ghost'} btn-block`} href={p.href} target="_blank" rel="noreferrer">{p.cta}</a>
+              <div className="plan-ctas">
+                <a className={`btn ${p.featured ? 'btn-accent' : 'btn-ghost'} btn-block`} href={p.href} target="_blank" rel="noreferrer">
+                  {p.secondary && <InstagramIcon />}{p.cta}
+                </a>
+                {p.secondary && (
+                  <a className="btn btn-ghost btn-block" href={p.secondary.href} target="_blank" rel="noreferrer">
+                    <WhatsAppIcon />{p.secondary.cta}
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>
