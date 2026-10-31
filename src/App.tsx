@@ -70,6 +70,23 @@ function Header() {
   )
 }
 
+// Muted looping showcase video. Respects reduced-motion by staying on the poster.
+function HeroVideo() {
+  const ref = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    v.play().catch(() => {})
+  }, [])
+  return (
+    <video ref={ref} muted loop playsInline preload="metadata" poster="/video/vrtx-hero-poster.jpg" aria-label="A look inside VRTX: daily analysis, the community, results and mentorship">
+      <source src="/video/vrtx-hero.webm" type="video/webm" />
+      <source src="/video/vrtx-hero.mp4" type="video/mp4" />
+    </video>
+  )
+}
+
 function Hero() {
   return (
     <section className="hero" id="top">
@@ -99,15 +116,8 @@ function Hero() {
       </div>
 
       <div className="container">
-        <div className="window reveal">
-          <div className="window-bar">
-            <span className="dots"><i /><i /><i /></span>
-            <span className="window-url">vrtx · XAUUSD · 5m</span>
-            <span className="window-live"><span className="dot" /> Live</span>
-          </div>
-          <div className="window-body">
-            <CandleChart />
-          </div>
+        <div className="hero-video reveal">
+          <HeroVideo />
         </div>
       </div>
 
