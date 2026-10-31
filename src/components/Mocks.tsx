@@ -89,7 +89,7 @@ export function MentorshipMock() {
             <span>{s.topic}</span>
             <span className="mm-state">
               {s.done && <svg className="mm-check" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="m3 8.5 3 3 7-7" /></svg>}
-              {s.done ? 'Completed' : 'Upcoming'}
+              {s.done ? 'Done' : 'Next'}
             </span>
           </li>
         ))}

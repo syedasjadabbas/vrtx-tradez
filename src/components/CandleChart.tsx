@@ -56,35 +56,46 @@ export function CandleChart({ count = 56, seed = 7, height = 360, annotate = tru
   const rangeHigh = Math.max(...candles.slice(0, Math.floor(count * 0.35)).map((c) => c.h))
   const entry = candles[sweepIdx + 3] ?? candles[sweepIdx]
   const last = candles[candles.length - 1]
+  const annoDelay = { transitionDelay: `${count * 18 + 200}ms` }
+  // The SVG stretches to fit its box, so labels are HTML placed by percentage
+  // to keep the text crisp and readable at any size.
+  const pct = (v: number, of: number) => `${(v / of) * 100}%`
 
   return (
-    <svg className="chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label="Illustrative gold price chart">
-      {[0.2, 0.4, 0.6, 0.8].map((t) => (
-        <line key={t} x1={0} x2={W} y1={H * t} y2={H * t} className="chart-grid" />
-      ))}
+    <div className="chart-box">
+      <svg className="chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label="Illustrative gold price chart">
+        {[0.2, 0.4, 0.6, 0.8].map((t) => (
+          <line key={t} x1={0} x2={W} y1={H * t} y2={H * t} className="chart-grid" />
+        ))}
+
+        {annotate && (
+          <g className="chart-anno" style={annoDelay}>
+            <rect x={pad} width={x(Math.floor(count * 0.35)) - pad} y={y(rangeHigh)} height={y(lo + (hi - lo) * 0.3) - y(rangeHigh)} className="chart-zone" />
+            <line x1={pad} x2={W - pad} y1={y(rangeHigh)} y2={y(rangeHigh)} className="chart-level" vectorEffect="non-scaling-stroke" />
+            <line x1={x(sweepIdx + 3)} x2={W - pad} y1={y(entry.c)} y2={y(entry.c)} className="chart-entry" vectorEffect="non-scaling-stroke" />
+          </g>
+        )}
+
+        {candles.map((c, i) => {
+          const up = c.c >= c.o
+          const bodyTop = y(Math.max(c.o, c.c))
+          const bodyH = Math.max(2, Math.abs(y(c.o) - y(c.c)))
+          return (
+            <g key={i} className={up ? 'candle up' : 'candle down'} style={{ animationDelay: `${i * 18}ms` }}>
+              <line x1={x(i)} x2={x(i)} y1={y(c.h)} y2={y(c.l)} />
+              <rect x={x(i) - step * 0.3} width={step * 0.6} y={bodyTop} height={bodyH} rx={1} />
+            </g>
+          )
+        })}
+      </svg>
 
       {annotate && (
-        <g className="chart-anno" style={{ transitionDelay: `${count * 18 + 200}ms` }}>
-          <rect x={pad} width={x(Math.floor(count * 0.35)) - pad} y={y(rangeHigh)} height={y(lo + (hi - lo) * 0.3) - y(rangeHigh)} className="chart-zone" />
-          <line x1={pad} x2={W - pad} y1={y(rangeHigh)} y2={y(rangeHigh)} className="chart-level" />
-          <text x={pad + 8} y={y(rangeHigh) - 8} className="chart-label">Range high</text>
-          <line x1={x(sweepIdx + 3)} x2={W - pad} y1={y(entry.c)} y2={y(entry.c)} className="chart-entry" />
-          <text x={x(sweepIdx) - 30} y={y(candles[sweepIdx].l) + 20} className="chart-label">Sweep</text>
-          <text x={W - pad - 150} y={y(last.h) - 12} className="chart-label chart-label--accent">Continuation +2R</text>
-        </g>
+        <div className="chart-anno" style={annoDelay}>
+          <span className="chart-label chart-label--above" style={{ left: pct(pad, W), top: pct(y(rangeHigh), H) }}>Range high</span>
+          <span className="chart-label chart-label--left" style={{ left: pct(x(sweepIdx), W), top: pct(y(candles[sweepIdx].l), H) }}>Sweep</span>
+          <span className="chart-label chart-label--accent chart-label--above" style={{ right: pct(pad, W), top: pct(y(last.h), H) }}>Continuation +2R</span>
+        </div>
       )}
-
-      {candles.map((c, i) => {
-        const up = c.c >= c.o
-        const bodyTop = y(Math.max(c.o, c.c))
-        const bodyH = Math.max(2, Math.abs(y(c.o) - y(c.c)))
-        return (
-          <g key={i} className={up ? 'candle up' : 'candle down'} style={{ animationDelay: `${i * 18}ms` }}>
-            <line x1={x(i)} x2={x(i)} y1={y(c.h)} y2={y(c.l)} />
-            <rect x={x(i) - step * 0.3} width={step * 0.6} y={bodyTop} height={bodyH} rx={1} />
-          </g>
-        )
-      })}
-    </svg>
+    </div>
   )
 }

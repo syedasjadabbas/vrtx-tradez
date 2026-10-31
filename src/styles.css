@@ -19,7 +19,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   background: var(--bg);
   color: var(--text);
@@ -28,7 +28,11 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overflow-wrap: break-word;
+  -webkit-tap-highlight-color: transparent;
 }
+/* Grid and flex children may shrink below their content width instead of overflowing */
+.stack-card > *, .partners > *, .plans > *, .trades > *, .principles > *, .mock-row > *, .daily > *, .footer-grid > * { min-width: 0; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 img { display: block; max-width: 100%; }
@@ -121,8 +125,13 @@ h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.
 .chart-zone { fill: rgba(255,255,255,.025); }
 .chart-level { stroke: rgba(255,255,255,.22); stroke-dasharray: 4 6; }
 .chart-entry { stroke: var(--accent); stroke-dasharray: 2 5; opacity: .7; }
-.chart-label { fill: var(--muted); font-size: 13px; font-family: var(--font); }
-.chart-label--accent { fill: var(--accent); font-weight: 600; }
+.chart-box { position: relative; width: 100%; height: 100%; }
+.chart-box .chart-anno { position: absolute; inset: 0; pointer-events: none; }
+.candle line, .chart-grid { vector-effect: non-scaling-stroke; }
+.chart-label { position: absolute; font-size: 12px; line-height: 1; color: var(--muted); white-space: nowrap; }
+.chart-label--above { transform: translateY(calc(-100% - 6px)); }
+.chart-label--left { transform: translate(calc(-100% - 10px), -50%); }
+.chart-label--accent { color: var(--accent); font-weight: 600; }
 .candle line { stroke-width: 1.4; }
 .candle.up line { stroke: var(--up); }
 .candle.up rect { fill: var(--up); }
@@ -353,16 +362,21 @@ footer { border-top: 1px solid var(--line); }
   .mobile-menu a:not(.btn) { padding: 12px 0; border-bottom: 1px solid var(--line); color: var(--muted); }
   .mobile-menu .btn { margin-top: 12px; }
   .header.open .mobile-menu { max-height: 420px; padding-bottom: 20px; }
+  .header.open { background: rgba(10,10,11,.97); }
   .daily { grid-template-columns: 1fr; gap: 24px; }
   .daily h2 { position: static; }
   .approach { padding-top: 88px; }
   .stack-card { position: relative; top: auto; grid-template-columns: 1fr; gap: 28px; padding: 28px 22px; min-height: 0; margin-bottom: 16px; transform: none; }
   .stack-card::before { display: none; }
   .stack { padding-bottom: 0; }
-  .principles, .trades { grid-template-columns: 1fr; }
-  .testimonials { columns: 1; }
-  .partners { grid-template-columns: 1fr; }
+  .principles { grid-template-columns: 1fr; }
+  .trades { grid-template-columns: 1fr 1fr; }
+  .trade--more { grid-column: 1 / -1; min-height: 0; }
+  .testimonials { columns: 2; }
   .section { padding: 88px 0; }
+  .philosophy { padding: 100px 0; }
+  .principles { margin-top: 56px; }
+  .partner-actions { max-width: 420px; }
 }
 @media (max-width: 640px) {
   .container { padding: 0 16px; }
@@ -382,4 +396,79 @@ footer { border-top: 1px solid var(--line); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-grid > div:first-child { grid-column: 1 / -1; }
   .hero-ctas .btn { width: 100%; }
+
+  /* Phones */
+  .header-inner { height: 64px; gap: 16px; }
+  .logo { font-size: 19px; gap: 10px; }
+  .logo-mark { width: 40px; height: 40px; border-radius: 10px; }
+  .mobile-menu { padding: 0 16px; }
+  .hero { padding: 108px 0 32px; }
+  .hero h1 { font-size: clamp(36px, 11vw, 52px); }
+  .hero .lead { font-size: 16px; margin-top: 18px; }
+  .hero-ctas { margin-top: 28px; width: 100%; }
+  .proof { font-size: 13px; margin-bottom: 22px; }
+  .stats { margin-top: 40px; }
+  .stat { padding: 22px 8px; }
+  h2 { font-size: clamp(32px, 9vw, 44px); }
+  .section { padding: 72px 0; }
+  .section-head { flex-direction: column; align-items: flex-start; margin-bottom: 32px; }
+  .approach { padding-top: 72px; }
+  .stack { margin-top: 40px; }
+  .stack-card { padding: 24px 18px; border-radius: 22px; gap: 24px; }
+  .stack-info { gap: 22px; }
+  .stack-points li { font-size: 14px; align-items: flex-start; }
+  .stack-points svg { margin-top: 4px; }
+  .mock { padding: 14px; }
+  .mock-chart { height: 180px; }
+  .mock-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mock-row div:last-child { grid-column: 1 / -1; }
+  .mock-row div { padding: 10px 12px; }
+  .mock-row strong { font-size: 14px; }
+  .dc-main { padding: 14px; }
+  .dc-msg { font-size: 13px; gap: 10px; }
+  .dc-av { width: 30px; height: 30px; }
+  .mm-list li { grid-template-columns: 40px 1fr auto; gap: 8px; padding: 12px; font-size: 14px; }
+  .next-step { padding: 64px 16px 72px; }
+  .philosophy { padding: 80px 0; }
+  .display { font-size: clamp(48px, 15vw, 72px); }
+  .principles { margin-top: 40px; }
+  .principle { padding: 22px; }
+  .principle h4 { margin-top: 20px; }
+  .trades { grid-template-columns: 1fr; }
+  .trade { min-height: 0; }
+  .trade-r { font-size: 48px; margin-top: 20px; }
+  .daily { gap: 8px; }
+  .daily-item { gap: 16px; padding: 22px 0; }
+  .daily-item h4 { font-size: 18px; }
+  .plans { margin-top: 40px; }
+  .plan { padding: 24px 20px; }
+  .badge { position: static; align-self: flex-start; margin-bottom: 14px; }
+  .price strong { font-size: 48px; }
+  .testimonials { columns: 1; margin-top: 40px; }
+  .testimonial { padding: 20px; }
+  .testimonial figcaption { flex-wrap: wrap; }
+  .partners { grid-template-columns: 1fr; margin-top: 40px; }
+  .partner { padding: 24px 20px; gap: 24px; }
+  .code { padding: 16px 20px; }
+  .code strong { font-size: 28px; }
+  .faq { margin-top: 36px; }
+  .faq-item button { font-size: 16px; padding: 18px 0; }
+  .final-cta { padding: 80px 16px; }
+  .final-logo { width: 72px; height: 72px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  /* .container resets padding on phones, so restore vertical spacing here */
+  .footer-grid { padding-top: 40px; padding-bottom: 40px; gap: 28px 16px; }
+  .disclaimer { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+}
+
+/* Small phones (iPhone SE, older Androids) */
+@media (max-width: 360px) {
+  .logo { font-size: 17px; letter-spacing: .16em; }
+  .hero h1 { font-size: 34px; }
+  .stat strong { font-size: 22px; }
+  .stat span { font-size: 12px; }
+  .stack-card { padding: 20px 14px; }
+  .pillar-num .big { font-size: 64px; }
+  .mm-list li { grid-template-columns: 34px 1fr auto; padding: 10px; }
+  .code strong { font-size: 24px; letter-spacing: .1em; }
 }
