@@ -209,6 +209,7 @@ function Approach() {
               <div className="mock-wrap reveal" onMouseMove={spotlight}>{mocks[i]}</div>
             </article>
           ))}
+          <div className="stack-spacer" aria-hidden="true" />
         </div>
       </div>
       <div className="container next-step reveal">
