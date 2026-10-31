@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
 import { CandleChart } from './components/CandleChart'
 import { AnalysisMock, CommunityMock, MentorshipMock } from './components/Mocks'
 import { ArrowIcon, CheckIcon, DiscordIcon, InstagramIcon, WhatsAppIcon, XIcon } from './components/Icons'
@@ -123,19 +123,6 @@ function Hero() {
   )
 }
 
-// Splits a heading into words that slide up one after another.
-function SplitWords({ text }: { text: string }) {
-  return (
-    <>
-      {text.split(' ').map((w, i) => (
-        <Fragment key={i}>
-          <span className="w"><span style={{ '--i': i } as CSSProperties}>{w}</span></span>{' '}
-        </Fragment>
-      ))}
-    </>
-  )
-}
-
 // Moves a soft highlight under the cursor on the mock-ups.
 function spotlight(e: MouseEvent<HTMLDivElement>) {
   const r = e.currentTarget.getBoundingClientRect()
@@ -147,22 +134,24 @@ function Approach() {
   const mocks = [<AnalysisMock />, <CommunityMock />, <MentorshipMock />]
   const refs = useRef<(HTMLElement | null)[]>([])
 
-  // Writes into --q how far the next card has slid over each card (0 to 1),
-  // which CSS uses to push the covered card back.
+  // On scroll: marks a card "in" once it has nearly settled, which starts its
+  // content animation, and writes into --q how far the next card has slid over it.
   useEffect(() => {
     let raf = 0
+    const ease = (t: number) => t * t * (3 - 2 * t)
     const update = () => {
       raf = 0
       const vh = window.innerHeight
       const cards = refs.current
       cards.forEach((el, i) => {
-        const next = cards[i + 1]
         if (!el) return
+        if (!el.classList.contains('in') && el.getBoundingClientRect().top < vh * 0.55) el.classList.add('in')
+        const next = cards[i + 1]
         if (!next) return el.style.setProperty('--q', '0')
         const stickTop = parseFloat(getComputedStyle(next).top) || 0
         const top = next.getBoundingClientRect().top
         const q = Math.min(1, Math.max(0, (vh - top) / (vh - stickTop)))
-        el.style.setProperty('--q', q.toFixed(3))
+        el.style.setProperty('--q', ease(q).toFixed(3))
       })
     }
     const onScroll = () => {
@@ -178,6 +167,9 @@ function Approach() {
     }
   }, [])
 
+  // Step-based delay so a card's content arrives as one ordered sequence.
+  const step = (n: number) => ({ '--d': `${n * 70}ms` }) as CSSProperties
+
   return (
     <section id="approach" className="approach">
       <div className="container">
@@ -191,22 +183,22 @@ function Approach() {
               ref={(el) => { refs.current[i] = el }}
             >
               <div className="stack-info">
-                <div className="pillar-num reveal">
-                  <span className="big-mask"><span className="big">{i + 1}</span></span>
+                <div className="pillar-num anim" style={step(0)}>
+                  <span className="big">{i + 1}</span>
                   <span className="tag">({p.tag})</span>
                 </div>
                 <div>
-                  <h3 className="split reveal"><SplitWords text={p.title} /></h3>
-                  <p className="reveal reveal--late">{p.body}</p>
+                  <h3 className="anim" style={step(1)}>{p.title}</h3>
+                  <p className="anim" style={step(2)}>{p.body}</p>
                 </div>
-                <ul className="stack-points reveal stagger">
+                <ul className="stack-points">
                   {p.points.map((pt, j) => (
-                    <li key={pt} style={{ '--i': j } as CSSProperties}><CheckIcon /> {pt}</li>
+                    <li key={pt} className="anim" style={step(3 + j)}><CheckIcon /> {pt}</li>
                   ))}
                 </ul>
-                <span className="stack-count">0{i + 1} / 0{pillars.length}</span>
+                <span className="stack-count anim" style={step(6)}>0{i + 1} / 0{pillars.length}</span>
               </div>
-              <div className="mock-wrap reveal" onMouseMove={spotlight}>{mocks[i]}</div>
+              <div className="mock-wrap anim anim--mock" style={step(2)} onMouseMove={spotlight}>{mocks[i]}</div>
             </article>
           ))}
           <div className="stack-spacer" aria-hidden="true" />

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, type CSSProperties } from 'react'
 
 type Candle = { o: number; h: number; l: number; c: number }
 
@@ -56,7 +56,7 @@ export function CandleChart({ count = 56, seed = 7, height = 360, annotate = tru
   const rangeHigh = Math.max(...candles.slice(0, Math.floor(count * 0.35)).map((c) => c.h))
   const entry = candles[sweepIdx + 3] ?? candles[sweepIdx]
   const last = candles[candles.length - 1]
-  const annoDelay = { transitionDelay: `${count * 18 + 200}ms` }
+  const annoDelay = { transitionDelay: `${count * 10 + 600}ms` }
   // The SVG stretches to fit its box, so labels are HTML placed by percentage
   // to keep the text crisp and readable at any size.
   const pct = (v: number, of: number) => `${(v / of) * 100}%`
@@ -81,7 +81,7 @@ export function CandleChart({ count = 56, seed = 7, height = 360, annotate = tru
           const bodyTop = y(Math.max(c.o, c.c))
           const bodyH = Math.max(2, Math.abs(y(c.o) - y(c.c)))
           return (
-            <g key={i} className={up ? 'candle up' : 'candle down'} style={{ animationDelay: `${i * 18}ms` }}>
+            <g key={i} className={up ? 'candle up' : 'candle down'} style={{ '--c': i } as CSSProperties}>
               <line x1={x(i)} x2={x(i)} y1={y(c.h)} y2={y(c.l)} />
               <rect x={x(i) - step * 0.3} width={step * 0.6} y={bodyTop} height={bodyH} rx={1} />
             </g>
