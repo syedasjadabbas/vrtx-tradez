@@ -23,6 +23,13 @@ function useReveal() {
   }, [])
 }
 
+// Logo click: smooth scroll to the top and drop any #section from the URL.
+function scrollToTop(e: MouseEvent<HTMLAnchorElement>) {
+  e.preventDefault()
+  history.replaceState(null, '', location.pathname + location.search)
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
 function Header() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -36,7 +43,7 @@ function Header() {
   return (
     <header className={`header${scrolled ? ' scrolled' : ''}${open ? ' open' : ''}`}>
       <div className="container header-inner">
-        <a href="#top" className="logo" aria-label="VRTX home">
+        <a href="/" className="logo" aria-label="VRTX home" onClick={(e) => { setOpen(false); scrollToTop(e) }}>
           <span className="logo-mark"><img src="/vrtx-icon.png" alt="" /></span>
           <span>VRTX</span>
         </a>
@@ -417,7 +424,7 @@ function Footer() {
       </div>
       <div className="container footer-grid">
         <div>
-          <a href="#top" className="logo"><span className="logo-mark"><img src="/vrtx-icon.png" alt="" /></span><span>VRTX</span></a>
+          <a href="/" className="logo" onClick={scrollToTop}><span className="logo-mark"><img src="/vrtx-icon.png" alt="" /></span><span>VRTX</span></a>
           <p className="mock-muted">I intersect the candles.</p>
           <div className="socials">
             <a href={links.discord} target="_blank" rel="noreferrer" aria-label="Discord"><DiscordIcon /></a>
