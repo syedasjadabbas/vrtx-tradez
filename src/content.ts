@@ -27,12 +27,12 @@ export const stats = [
 ]
 
 // Founder section. Copy is a draft built from Mirza's public profiles. Have him confirm it.
-// photo: put his photo at public/mirza.jpg and set photo: '/mirza.jpg'. Until then a branded card shows.
+// photo: a 4:5 portrait in public/ (a .webp with the same name is used when present). Leave '' for the branded card.
 export const mentor = {
   eyebrow: 'Meet your mentor',
   name: 'Mirza Hammad',
   role: 'Founder, VRTX',
-  photo: '',
+  photo: '/mirza.jpg',
   story: [
     'I trade gold, and I teach it exactly the way I trade it. Every idea starts with time, then price: when the move should happen, where the liquidity sits and which sequence confirms it.',
     'VRTX started as a place to share that process openly. Today it is a free community of 330+ traders, daily XAUUSD analysis and private 1-on-1 mentorship for those who want to go deeper.',

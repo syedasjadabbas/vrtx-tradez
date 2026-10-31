@@ -243,7 +243,10 @@ function Mentor() {
         <div className="mentor-photo reveal">
           <div className="mentor-frame">
             {mentor.photo ? (
-              <img src={mentor.photo} alt={mentor.name} loading="lazy" />
+              <picture>
+                <source srcSet={mentor.photo.replace(/\.jpe?g$/, '.webp')} type="image/webp" />
+                <img src={mentor.photo} alt={`${mentor.name}, founder of VRTX`} width={819} height={1024} loading="lazy" decoding="async" />
+              </picture>
             ) : (
               <div className="mentor-placeholder" aria-hidden="true">
                 <img src="/icon-512.png" alt="" />
