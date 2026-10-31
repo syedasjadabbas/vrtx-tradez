@@ -199,6 +199,11 @@ function Approach() {
                   <h3 className="split reveal"><SplitWords text={p.title} /></h3>
                   <p className="reveal reveal--late">{p.body}</p>
                 </div>
+                <ul className="stack-points reveal stagger">
+                  {p.points.map((pt, j) => (
+                    <li key={pt} style={{ '--i': j } as CSSProperties}><CheckIcon /> {pt}</li>
+                  ))}
+                </ul>
                 <span className="stack-count">0{i + 1} / 0{pillars.length}</span>
               </div>
               <div className="mock-wrap reveal" onMouseMove={spotlight}>{mocks[i]}</div>
@@ -450,7 +455,13 @@ function Footer() {
           all investors. Content shared by VRTX is for educational purposes only and is not financial advice. Past
           performance does not guarantee future results.
         </p>
-        <p>© {new Date().getFullYear()} VRTX. All rights reserved.</p>
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} VRTX. All rights reserved.</p>
+          <p>
+            Developed by{' '}
+            <a href="https://www.zeploy.tech" target="_blank" rel="noreferrer" className="credit">Zeploy Tech</a>
+          </p>
+        </div>
       </div>
     </footer>
   )

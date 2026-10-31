@@ -30,16 +30,19 @@ export const pillars = [
     tag: 'Analysis',
     title: 'See where price is heading before the session opens',
     body: 'Daily bias, key levels and the sequence being watched on gold, shared in the server ahead of the open.',
+    points: ['Daily bias on XAUUSD before the session', 'Key levels and time windows marked out', 'The exact sequence being watched for entry'],
   },
   {
     tag: 'Community',
     title: 'Trade alongside traders who take it seriously',
     body: 'A focused Discord built around trade-talk, recaps and honest review, without noise or signal spam.',
+    points: ['Live trade-talk with Mirza and members', 'Recaps of wins and losses, explained', 'Process over signals, always'],
   },
   {
     tag: 'Mentorship',
     title: 'Private 1-on-1 sessions built around your trading',
     body: 'Work directly with Mirza on your model, your execution and your psychology, at your pace.',
+    points: ['Sessions arranged around your schedule', 'Review of your trades and journal', 'Risk and psychology coaching'],
   },
 ]
 
